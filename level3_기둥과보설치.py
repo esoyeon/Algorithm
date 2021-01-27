@@ -1,97 +1,44 @@
+# 조건
+# 기둥(0)일 경우 -> 바닥(y=0), 왼쪽 보(x-1, y, 1), 제자리 보(x, y, 1), 다른 기둥 위(x, y-1, 0)
+# 보(1)일 경우 -> 아래 기둥(x,y-1,0), 오른쪽 기둥(x+1, y-1, 0), 왼쪽과 오른쪽에 보 (x-1, y, 1)&(x+1, y, 1)
+
+
+def check(answer):
+    for x, y, structure in answer: 
+        if structure == 0 : #기둥
+            if y == 0 or (x, y-1,0) in answer or (x-1, y, 1) in answer or (x, y, 1) in answer:
+                continue
+            else:
+                return False
+        else: #보
+            if (x, y-1, 0) in answer or (x+1, y-1, 0) in answer or ((x-1, y, 1) in answer and (x+1, y, 1) in answer):
+                continue
+            else:
+                return False
+    return True
+
+
 def solution(n, build_frame):
-    answer = []
+    answer = set() #set으로 중복제거하는 것이 in 연산자에서 효율적
 
-    m = n+1
-
-    bar = [[0]*m for _ in range(m)]
-    pillar = [[0]*m for _ in range(m)]
-
-    for f in build_frame: 
-        x, y, a, b = f
-        # 기둥
-        if a == 0 and b == 1:
-            # 벽면 초과 x
-            if 0<= x <= n and 0 <= y <= n-1:
-                # 설치 
-                if y == 0 or bar[x-1][y]==1 or bar[x][y]==1 or pillar[x][y-1]==1:
-                    answer.append([x, y, 0])
-                    pillar[x][y] += 1 
-
-        
-        # 보
-        elif a == 1 and b == 1: 
-            # 벽면 초과 x
-            if 0 <= x <= n-1 and 0 < y <= n:
-                # 설치
-                if pillar[x][y] == 1 or pillar[x+1][y] == 1 or (bar[x-1][y] == 1 and bar[x+1][y]==1):
-                    answer.append([x, y, 1])
-                    bar[x][y] += 1
-
-        # # 기둥 삭제 
-        # elif a == 0 and b == 0:
-        #     if_bar = bar.copy()
-        #     if_pillar = pillar.copy()
-        #     # 해당 기둥 삭제 
-        #     if_pillar[x][y] -= 1
-
-        #     check_list = [[x-1, y+1, 1, 1], [x, y+1, 1, 1], [x, y+1, 0, 1]]
-        #     for c in check_list:
-        #         x, y, a, b = c
-        #         # 기둥
-        #         if a == 0 and b == 1:
-        #             # 벽면 초과 x
-        #             if 0<= x <= n and 0 <= y <= n-1:
-        #                 # 설치 
-        #                 if y == 0 or if_bar[x-1][y]==1 or if_bar[x][y]==1 or if_pillar[x][y-1]==1:
-        #                     count += 1
-        #                 else:
-        #                     break
-        #         # 보
-        #         elif a == 1 and b == 1: 
-        #             # 벽면 초과 x
-        #             if 0 <= x <= n-1 and 0 < y <= n:
-        #                 # 설치
-        #                 if if_pillar[x][y] == 1 or if_pillar[x+1][y] == 1 or (if_bar[x-1][y] == 1 and if_bar[x+1][y]==1):
-        #                     count += 1
-        #                 else:
-        #                     break
-            
-        #     if count == len(check_list):
-        #         answer.drop([x, y, 0])
-            
-        # # 보 삭제 
-        # elif a == 1 and b == 0:
-        #     if_bar = bar.copy()
-        #     if_pillar = pillar.copy()
-        #     # 해당 기둥 삭제 
-        #     if_bar[x][y] -= 1
-
-        #     check_list = [[x-1, y, 1,1], [x, y, 1, 1], [x, y, 0, 1], [x+1, y, 0, 1]]
-        #     for c in check_list:
-        #         x, y, a, b = c
-        #         # 기둥
-        #         if a == 0 and b == 1:
-        #             # 벽면 초과 x
-        #             if 0<= x <= n and 0 <= y <= n-1:
-        #                 # 설치 
-        #                 if y == 0 or if_bar[x-1][y]==1 or if_bar[x][y]==1 or if_pillar[x][y-1]==1:
-        #                     count += 1
-        #                 else:
-        #                     break
-        #         # 보
-        #         elif a == 1 and b == 1: 
-        #             # 벽면 초과 x
-        #             if 0 <= x <= n-1 and 0 < y <= n:
-        #                 # 설치
-        #                 if if_pillar[x][y] == 1 or if_pillar[x+1][y] == 1 or (if_bar[x-1][y] == 1 and if_bar[x+1][y]==1):
-        #                     count += 1
-        #                 else:
-        #                     break
-            
-        #     if count == len(check_list):
-        #         answer.drop([x, y, 1])
+    for x, y, structure , action in build_frame:
+        xys = (x, y, structure)
+        if action == 1: #설치
+            answer.add(xys) #일단 설치 
+            if not check(answer): #문제발생하면 삭제
+                answer.remove(xys)
+        else: # 삭제
+            answer.remove(xys) #일단 삭제
+            if not check(answer): #문제 발생하면 다시 추가
+                answer.add(xys)
+    
+    # 정렬
+    answer = [list(ans) for ans in answer]
+    answer.sort()
 
     return answer
+
+
 
 build_frame = [[1,0,0,1],[1,1,1,1],[2,1,0,1],[2,2,1,1],[5,0,0,1],[5,1,0,1],[4,2,1,1],[3,2,1,1]]
 n = 5
