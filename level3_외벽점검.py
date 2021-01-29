@@ -6,6 +6,8 @@
 
 #idea 3: 원형 -> 원형을 일자로 -> 길이 두배 하면 됨
 
+#idea 4: 시계방향, 반시계방향 -> 어차피 경로는 하나!, 시계방향에서 그 길을 가는 다른 점이 count될 것이므로, 굳이 방향고려 안해도 됨. 
+
 from itertools import permutations
 
 from itertools import permutations
