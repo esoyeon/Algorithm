@@ -6,14 +6,6 @@ import random
 import re
 import sys
 
-#
-# Complete the 'climbingLeaderboard' function below.
-#
-# The function is expected to return an INTEGER_ARRAY.
-# The function accepts following parameters:
-#  1. INTEGER_ARRAY ranked
-#  2. INTEGER_ARRAY player
-
 from collections import defaultdict
 
 # # p보다 크면서 가장 가까운 값 찾기 / 이진탐색 응용 
