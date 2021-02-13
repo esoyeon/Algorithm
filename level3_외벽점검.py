@@ -15,7 +15,9 @@ def solution(n, weak, dist):
     length = len(weak)
     for i in range(length):
         weak.append(weak[i] + n)
+
     answer = len(dist) + 1 # 투입할 친구 수의 최솟값을 찾아야 하므로 len(dist) + 1로 초기화
+    
     # 0부터 length - 1까지의 위치를 각각 시작점으로 설정
     for start in range(length):
         # 친구를 나열하는 모든 경우 각각에 대하여 확인
@@ -37,5 +39,4 @@ def solution(n, weak, dist):
     return answer
 
 n, weak, dist = 12, [1, 5, 6, 10], [1,2,3,4] 
-print(solution(n, weak,dist
-))
+print(solution(n, weak,dist))
