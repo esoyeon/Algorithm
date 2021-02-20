@@ -56,7 +56,7 @@ from collections import defaultdict
 #     return result
 
 
-## 다른 사람코드 -> 효율적! 
+## 효율적! 
 def climbingLeaderboard(ranked, player):
     leaderboard = sorted(set(ranked), reverse = True)
     l = len(leaderboard)
